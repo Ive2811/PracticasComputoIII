@@ -1,0 +1,1 @@
+const {comidas} = require('./ejercicio3.js');
