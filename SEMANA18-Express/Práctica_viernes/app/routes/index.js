@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const data = require('../userData');
 const methods = require('../methods');
+var registros = require('../registros')
 
 //Constantes para rutas de páginas, login y register.
 const loginPage = "../views/pages/login";
@@ -49,6 +50,7 @@ router.post('/register', (req,res) =>{
     email,
     password: pHash
   });
+  registros.save(fullName,email, password)
   res.render(loginPage, {
     message: "Registro exitoso. Inicie sesión.",
     messageClass: "alert-success"
@@ -66,7 +68,21 @@ router.post('/register', (req,res) =>{
     const pHash = methods.getHashedPassword(password);
 
     const dataU = data.data.find(u => {
-      return u.email === email && pHash === u.password;
+      var valid= u.email === email && pHash === u.password;
+      return valid
   });
+
+  if(dataU) {
+    const authToken = methods.generateToken();
+    
+    methods.authTokens[authToken] = dataU;
+    res.cookie('AuthToken', authToken);
+    res.redirect('/home');
+  } else {
+    res.render(loginPage, {
+      message: "El correo o contraseña no coinciden.",
+      messageClass: "alert-danger"
+    });
+  }
 });
 module.exports = router;
