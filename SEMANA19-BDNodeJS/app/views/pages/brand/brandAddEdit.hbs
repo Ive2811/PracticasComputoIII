@@ -1,0 +1,11 @@
+{{> header}}
+<h2>{{viewTitle}}</h2>
+
+<form action="/brand" method="post">
+<input type="hidden" name="_id" value="{{brand._id}}">
+Nombre
+<input type="text" name="name" value="{{brand.name}}"><br/>
+descripción
+<input type="text" name="description" value="{{brand.description}}"><br/>
+<button type="submit">Save</button>
+</form>
